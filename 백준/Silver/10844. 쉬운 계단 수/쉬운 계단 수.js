@@ -1,55 +1,48 @@
 /*
-쉬운 계단 수 -- 다시 풀어보기!
+인접한 모든 자리 차이가 1인 수 = 계단 수
 
-인접한 자리의 숫자 차이가 1 = 계단수
-N이 주어질 때 자리수가 N인 계단 수가 총 몇개 있는지 구하기
+길이 N인 계단 수 총 개수는?
+0시작은 계단 수 X
 
-1<=N<=100
+dp[n][m] = n자리 숫자의 끝자리가 m인 경우의 계단 수 개수 
+= dp[n-1][m-1] + dp[n-1][m+1]
 
-<프로세스>
-재귀로 풀면 터질듯 -> dp
+dp[2,2] = dp[1][1] + dp[1][3]
 
-N=1
-1 2 3 4 5 6 7 8 9
+?2
+= 12, 32
 
-N=2
-10 12 21 23 32 34 43 45 54 56 65 67 76 78 87 89 98
-N자리가 1,9는 다음에 올 수 있는게 1개, 1~8은 2개씩
-길이 N인 i로 마지막 숫자의 가지수 = N-1길이의 i-1로 끝나는 수 + i+1로 끝나는 수
+?4
+= 34, 54
 
-*/
-let fs = require("fs");
+??3
+
+*/ const fs = require("fs");
 const filePath = process.platform === "linux" ? "/dev/stdin" : "./example.txt";
-let N = parseInt(fs.readFileSync(filePath).toString().trim());
+const input = fs.readFileSync(filePath).toString().trim();
 
-let dp = new Array(N + 1).fill(0);
-let DIV = 1000000000;
+const N = Number(input);
+const MOD = 1_000_000_000;
 
-// DP 배열 초기화
-for (let i = 0; i < N + 1; i++) {
-  dp[i] = new Array(10).fill(0);
-}
+const dp = Array.from({ length: N + 1 }, () => Array(10).fill(0));
 
-// 길이가 1인 계단 수 초기화
-for (let i = 1; i < 10; i++) {
+for (let i = 1; i <= 9; i++) {
   dp[1][i] = 1;
 }
 
-// DP 계산
-for (let i = 2; i < N + 1; i++) {
-  for (let j = 0; j < 10; j++) {
-    if (j == 0) {
-      dp[i][j] = dp[i - 1][1] % DIV;
-    } else if (j == 9) {
-      dp[i][j] = dp[i - 1][8] % DIV;
+// DP 점화식 적용
+for (let i = 2; i <= N; i++) {
+  for (let j = 0; j <= 9; j++) {
+    if (j === 0) {
+      dp[i][j] = dp[i - 1][1];
+    } else if (j === 9) {
+      dp[i][j] = dp[i - 1][8];
     } else {
-      dp[i][j] = (dp[i - 1][j - 1] + dp[i - 1][j + 1]) % DIV;
+      dp[i][j] = (dp[i - 1][j - 1] + dp[i - 1][j + 1]) % MOD;
     }
   }
 }
 
-// 결과 계산
-let ans = dp[N].reduce((acc, cur) => (acc + cur) % DIV, 0);
-
-// 정답 출력
-console.log(ans);
+// 최종 결과 계산
+const result = dp[N].reduce((acc, val) => (acc + val) % MOD, 0);
+console.log(result);

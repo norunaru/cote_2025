@@ -128,7 +128,7 @@ public class boj_16235 {
 				//각 칸의 나무들의 나이에 따라 양분 분배
 				for(int k=0; k<ages[i][j].size(); k++) {
 					//남은 양분이 충분하면
-					if(foods[i][j]>ages[i][j].get(k)) {
+					if(foods[i][j]>=ages[i][j].get(k)) {
 						foods[i][j] -= ages[i][j].get(k);
 						ages[i][j].set(k, ages[i][j].get(k)+1);//먹은 나무는 나이 증가
 						
@@ -170,7 +170,7 @@ public class boj_16235 {
 							nx = j+dx[dir];
 							
 							if(ny>=0 && ny<N && nx>=0 && nx<N) {
-								ages[i][j].add(0, 1);
+								ages[ny][nx].add(0, 1);
 							}
 						}
 					}
